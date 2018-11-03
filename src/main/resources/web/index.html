@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Page Title</title>
+<link rel="stylesheet" href="../web/css/style.css">
+
+<script defer src="../web/js/vector3d.js" ></script>
+<script defer src="../web/js/latlon-ellipsoidal.js" ></script>
+<script defer src="../web/js/utm.js" ></script>
+<script defer src="../web/js/dms.js" ></script>
+
+<script  src="../web/js/latlon-spherical.js" ></script>
+
+
+</head>
+
+<body>
+
+
+
+latitude: <input type="text" name="inLatLon" value="-15.7801">
+longitude: <input type="text" name="inLatLon" value=" -47.9292">
+<input type="submit" value="Submit" onclick="parseDMSLat ()">
+
+<p id="decCoord"></p>
+<p id="parseDMS"></p>
+<p id="toDMS"></p>
+
+<p id="UtmToDec"></p>
+
+<p id="lat2UTM"></p>
+<p id="revDMStoDD"></p>
+
+<script>
+function parseDMSLat () {
+	
+	 	// capturar as coordenadas digitadas //
+	 	var inDDLat = document.getElementsByName("inLatLon")[0].value;
+	 	var inDDLon = document.getElementsByName("inLatLon")[1].value;
+	 	
+		 	// mostrar as coordenadas digitadas //
+		 	document.getElementById("decCoord").innerHTML = "Coordenada solicitada: " + inDDLat + "," + inDDLon;
+		 
+		 	
+	 	// conversão DD para DMS //
+	 	var lat = Dms.parseDMS(inDDLat);
+	 	var lon = Dms.parseDMS(inDDLon);
+	 	var ddToDMS = new LatLon(lat, lon); // 51.4778°N, 000.0015°W
+
+ 			
+	 		document.getElementById("parseDMS").innerHTML = "<b style='color:orange;'>DD to DMS   </b> " + ddToDMS;
+		
+	 	
+	 	// conversão DD para UTM //
+	 	var DDToUTM = new LatLon (inDDLat, inDDLon);
+		var ddToUTM = DDToUTM.toUtm();
+ 	 
+  			document.getElementById("toDMS").innerHTML = "<b style='color:blue;'>DD to UTM   </b>" + ddToUTM;
+  		
+  		
+  		// reversão da coordenada convertida UTM para DMS
+  		var UTMToDMS = Utm.parse(ddToUTM.toString());
+  		var utmToDMS = UTMToDMS.toLatLonE();
+
+			document.getElementById("lat2UTM").innerHTML = "<b style='color:green;'> --reversão-- UTM to DMS  </b> " + utmToDMS;
+		
+		
+		// reversão da coordenada convertida DMS em DD //
+		
+		var dmsToDDLat = Dms.parseDMS(utmToDMS.lat); // Dms.toLat (utmToDMSaa.lat, 'dms', 0);
+		var dmsToDDLon = Dms.parseDMS(utmToDMS.lon); //Dms.toLon (utmToDMSaa.lon, 'dms', 0);
+		
+    		document.getElementById("revDMStoDD").innerHTML = "<b style='color:red;'> --reversão-- DMS to DD   </b> " + dmsToDDLat + "," + dmsToDDLon;
+}
+</script>
+
+
+
+
+</body>
+
+</html>
